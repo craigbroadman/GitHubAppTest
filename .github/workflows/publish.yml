@@ -15,16 +15,23 @@ jobs:
       # id-token: write # needed for provenance data generation
     timeout-minutes: 10
     steps:
+      - uses: actions/create-github-app-token@v1.7.0
+        id: version-bump-bot-token
+        with:
+          app-id: ${{ vars.VERSION_BUMP_APP_ID }}
+          private-key: ${{ secrets.VERSION_BUMP_APP_PRIVATE_KEY }}
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ steps.version-bump-bot-token.outputs.token }}
 
-      - name: Install Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          registry-url: https://npm.pkg.github.com/
+      # - name: Install Node
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: 20
+      #     registry-url: https://npm.pkg.github.com/
 
       - name: 🤖 Setup Git user for versioning packages
         run: |
@@ -40,8 +47,8 @@ jobs:
         shell: bash
 
       - name: 🚀 Nx Release (version bump, package and changelog)
-        run: npx nx release
+        run: npx nx release --git-commit --skip-publish
         shell: bash
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ steps.version-bump-bot-token.outputs.token }}
           # NPM_CONFIG_PROVENANCE: true
