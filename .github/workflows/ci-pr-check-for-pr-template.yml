@@ -1,0 +1,15 @@
+name: CI - Validate PR Template exists
+on: push
+
+jobs:
+  find-file:
+    if: startsWith(github.head_ref, 'renovate') == false # skip this step if this is a renovate pull request!!
+    name: CI - Validate PR Template exists
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⤵ Check out code
+        uses: actions/checkout@v4
+
+      - name: 👀 Search for docs/pull_request_template.md
+        shell: pwsh
+        run: Test-Path docs/pull_request_template.md | Should -Be $true

@@ -1,0 +1,22 @@
+name: PR Title - validate against conventional commits standards
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - edited
+      - synchronize
+
+permissions:
+  pull-requests: read
+
+jobs:
+  lint:
+    name: CI - Validate PR Title follows Conventional Commits standards
+    runs-on: ubuntu-latest
+    if: startsWith(github.head_ref, 'renovate') == false # skip this step if this is a renovate pull request
+
+    steps:
+      - uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

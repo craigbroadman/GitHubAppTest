@@ -1,0 +1,13 @@
+mode: Mainline
+branches: 
+  master:
+    mode: ContinuousDelivery
+    prevent-increment-of-merged-branch-version: true
+    track-merge-target: false
+    regex: ^master$|^main$
+    source-branches: [ 'main' ]
+    tracks-release-branches: false
+    is-release-branch: false
+    is-mainline: true
+ignore:
+  sha: []

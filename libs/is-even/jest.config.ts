@@ -1,0 +1,22 @@
+/* eslint-disable */
+export default {
+  displayName: 'is-even',
+  preset: '../../jest.preset.js',
+  testEnvironment: 'node',
+  transform: {
+    '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
+  },
+  moduleFileExtensions: ['ts', 'js', 'html'],
+  coverageDirectory: '../../coverage/libs/is-even',
+  coverageReporters: ['text', 'cobertura'],
+  reporters: [
+    'default',
+    [
+      'jest-junit',
+      {
+        outputDirectory: './coverage/libs/is-even',
+        outputName: 'unit-test-results.xml',
+      },
+    ],
+]
+};
