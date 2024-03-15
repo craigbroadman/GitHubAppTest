@@ -48,7 +48,7 @@ jobs:
 
       - name: 🚀 Nx Release (changelog, version bump and publish packages)
         run: |
-          npx nx release --skip-publish
+          npx nx release --skip-publish --verbose
         shell: bash
         env:
           NODE_AUTH_TOKEN: ${{ steps.version-bump-bot-token.outputs.token }}
