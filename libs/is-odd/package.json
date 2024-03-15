@@ -1,6 +1,6 @@
 {
   "name": "@ipipeline/is-odd",
-  "version": "201.11.0",
+  "version": "201.12.0",
   "dependencies": {
     "tslib": "^2.3.0",
     "@ipipeline/is-even": "201.9.0"
