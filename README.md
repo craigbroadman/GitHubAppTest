@@ -1,6 +1,6 @@
 # iPipeline AWS CDK Packages
 
-## Steps to create repo
+## Steps to create repo:
 
 Install GitHub CLI and Configure https://cli.github.com/
 
