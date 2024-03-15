@@ -1,0 +1,48 @@
+name: Bumper
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Bumper
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # id-token: write # needed for provenance data generation
+    timeout-minutes: 10
+    steps:
+        - uses: actions/create-github-app-token@v1.7.0
+          id: version-bump-bot-token
+          with:
+            app-id: ${{ vars.VERSION_BUMP_APP_ID }}
+            private-key: ${{ secrets.VERSION_BUMP_APP_PRIVATE_KEY }}
+
+        - name: Checkout
+          uses: actions/checkout@v4
+          with:
+            token: ${{ steps.version-bump-bot-token.outputs.token }}
+
+        - name: Bump Version, create tag and commit
+          id: bump_version
+          run: |
+            npm version "minor" --no-git-tag-version
+            VERSION=$(node -p "require('./package.json').version")
+            echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+            # git commit -am "Bump version to $VERSION"
+            # git tag "$VERSION"
+            # git push origin HEAD:main
+            # git push origin "$VERSION"
+          shell: bash
+
+        - name: Version Bump Summary
+          run: |
+            VERSION=${{ steps.bump_version.outputs.VERSION }}
+            echo "### 🚀 Version Bumped" >> $GITHUB_STEP_SUMMARY
+            echo "The project version has been increased to **$VERSION**." >> $GITHUB_STEP_SUMMARY
+            echo "This includes a new Git tag and commit for **$VERSION** which has been pushed to the repository." >> $GITHUB_STEP_SUMMARY
+            echo "Check out the [commit history](https://github.com/${{ github.repository }}/commits/main) to see the changes." >> $GITHUB_STEP_SUMMARY
+          shell: bash
+
+        - name: Commit changes if any
+          uses: stefanzweifel/git-auto-commit-action@v5.0.0
