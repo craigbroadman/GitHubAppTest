@@ -46,9 +46,11 @@ jobs:
         run: npx nx report
         shell: bash
 
-      - name: 🚀 Nx Release (version bump, package and changelog)
-        run: npx nx release --git-commit --skip-publish
+      - name: 🚀 Nx Release (changelog, version bump and publish packages)
+        run: |
+          npx nx release changelog --git-commit
+          npx nx release version --git-commit
+          npx nx release publish
         shell: bash
         env:
           NODE_AUTH_TOKEN: ${{ steps.version-bump-bot-token.outputs.token }}
-          # NPM_CONFIG_PROVENANCE: true
