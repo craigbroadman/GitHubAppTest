@@ -1,0 +1,42 @@
+name: Bump Version
+
+on:
+  workflow_dispatch:
+  # push:
+  #   tags:
+  #     - v*.**
+
+jobs:
+  bump:
+    name: Bump Version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # id-token: write # needed for provenance data generation
+    timeout-minutes: 10
+    steps:
+      - uses: actions/create-github-app-token@v1.7.0
+        id: version-bump-bot-token
+        with:
+          app-id: ${{ vars.VERSION_BUMP_APP_ID }}
+          private-key: ${{ secrets.VERSION_BUMP_APP_PRIVATE_KEY }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ steps.version-bump-bot-token.outputs.token }}
+
+      - name: Print Environment Info
+        run: npx nx report
+        shell: bash
+
+      - name: 🚀 Nx Release (changelog and version bump)
+        run: |
+          npx nx release --skip-publish
+        shell: bash
+        env:
+          NODE_AUTH_TOKEN: ${{ steps.version-bump-bot-token.outputs.token }}
+
+      - name: Commit changes if any
+        uses: stefanzweifel/git-auto-commit-action@v5.0.0
