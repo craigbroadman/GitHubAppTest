@@ -27,16 +27,25 @@ jobs:
           fetch-depth: 0
           token: ${{ steps.version-bump-bot-token.outputs.token }}
 
+      - name: 🤖 Setup Git user for versioning packages
+        run: |
+          git config user.name "Github Actions"
+          git config user.email "actions@users.noreply.github.com"
+
+      - name: Install dependencies
+        run: npm install
+        shell: bash
+
       - name: Print Environment Info
         run: npx nx report
         shell: bash
 
       - name: 🚀 Nx Release (changelog and version bump)
         run: |
-          npx nx release --skip-publish
+          npx nx release --skip-publish --verbose
         shell: bash
         env:
-          GH_TOKEN: ${{ steps.version-bump-bot-token.outputs.token }}
+          NODE_AUTH_TOKEN: ${{ steps.version-bump-bot-token.outputs.token }}
 
       - name: Commit changes if any
         uses: stefanzweifel/git-auto-commit-action@v5.0.0
