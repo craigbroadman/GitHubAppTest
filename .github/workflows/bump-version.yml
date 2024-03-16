@@ -36,7 +36,7 @@ jobs:
           npx nx release --skip-publish
         shell: bash
         env:
-          NODE_AUTH_TOKEN: ${{ steps.version-bump-bot-token.outputs.token }}
+          GH_TOKEN: ${{ steps.version-bump-bot-token.outputs.token }}
 
       - name: Commit changes if any
         uses: stefanzweifel/git-auto-commit-action@v5.0.0
