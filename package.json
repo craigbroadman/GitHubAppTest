@@ -1,6 +1,6 @@
 {
   "name": "@ipipeline/aws-cdk",
-  "version": "201.12.1",
+  "version": "201.13.0",
   "license": "MIT",
   "scripts": {},
   "private": true,
